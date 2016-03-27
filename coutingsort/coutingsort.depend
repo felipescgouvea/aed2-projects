@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1459013781 source:/home/felipe/Documentos/gitprojects/aed2-projects/quicksort/coutingsort/main.c
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+
