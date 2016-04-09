@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1460169906 source:/home/felipe/Documentos/gitprojects/aed2-projects/heapsort/main.c
+	<stdio.h>
+	<stdlib.h>
+
