@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1460261681 source:/home/felipe/Documentos/gitprojects/aed2-projects/arvore-abb/main.c
+	<stdio.h>
+	<stdlib.h>
+
