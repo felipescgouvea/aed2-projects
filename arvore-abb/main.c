@@ -28,6 +28,7 @@ TArvBin CriaNo(TItem novo){
     no->Item = novo;
     no->dir = NULL;
     no->esq = NULL;
+    return no;
 }
 void InsereABB (TArvBin *aux, TItem novo){
 	//printf("%d\n", novo.Chave);
@@ -52,7 +53,8 @@ void RemoveABB (TArvBin *aux, TItem item){
     printf("removendo...\n");
     if((*aux) == NULL) return;
 
-    if(DeletaNo(&(*aux)) == 1) {
+    if((*aux)->Item.Chave == item.Chave) {
+        DeletaNo(&(*aux), item);
         printf("deletou!\n");
         return;
     }
@@ -72,22 +74,29 @@ int qtd_filhos(TArvBin arv){
     if(arv->esq != NULL) qtd++;
     return qtd;
 }
-int DeletaNo(TArvBin *arv, TItem item){
-    if(item.Chave == (*arv)->Item.Chave){
+void DeletaNo(TArvBin *arv, TItem item){
+
+        //TArvBin aux;
+        /*
+        if(qtd_filhos(arv) < 2){
+            if((*arv)->dir == NULL){
+                aux = (*arv);
+                (*arv) = (*arv)->esq;
+                free(aux);
+                //retira esq
+            }
+            else{
+                aux = (*arv);
+                (*arv) = (*arv)->dir;
+
+                //retira dir
+            }
+        }
+        */
         printf("encontrou o no a ser deletado\n");
-        return CONTEM;
-    }
-    else {
-        printf("ainda não...\n");
-        return NAO_CONTEM;
-    }
 }
 
 
-int filho_existente(TArvBin arv){
-    if(arv->dir == NULL) return ESQ;
-    else return DIR;
-}
 void imprime (TArvBin arv){
     if(arv == NULL) {
         return;
@@ -103,7 +112,13 @@ void imprime (TArvBin arv){
 }
 
 int PesquisaABB(TArvBin *arv, TItem item){
-    if((*arv) == NULL) return NAO_CONTEM;
+    printf("%d ", (*arv)->Item.Chave);
+    /*
+    if(*arv == NULL) {
+        printf("Nao encontrou\n");
+        return NAO_CONTEM;
+    }
+    */
     if((*arv)->Item.Chave == item.Chave){
         printf("Encontrou a chave!\n");
         //RemoveABB(&(*arv), item);
@@ -134,15 +149,23 @@ int main()
         scanf("%d", &novo.Chave);
         if(novo.Chave == -1)break;
         InsereABB(&abb, novo);
+        //imprime(abb);
     }
     //printf("erro");
-    imprime(abb);
+    //imprime(abb);
     scanf("%d", &novo.Chave);
-    if (PesquisaABB(&abb, novo) == NAO_CONTEM) InsereABB(&abb,novo);
-    else RemoveABB(&abb,novo);
-    printf("%d", QuantidadeNumeros(abb));
-     imprime(abb);
+
+    PesquisaABB(&abb, novo);
+    InsereABB(&abb,novo);
+
+
+    //test(&abb);
+    //else RemoveABB(&abb,novo);
+    //printf("%d\n", QuantidadeNumeros(abb));
+     //imprime(abb);
 
     return 0;
 }
-
+void test(TArvBin *arv){
+    if(*arv != NULL) printf("BUGADO");
+}

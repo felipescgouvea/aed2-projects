@@ -34,11 +34,18 @@ TDicionario CriaItem(TItem novo){
     return no;
 }
 void InsereDicionario(TDicionario *D, TItem novo){
+    TDicionario aux = (*D)->prox;
 	//printf("%d\n", novo.Chave);
-	if(*D == NULL) {
+	if(aux->Item.Chave == NULL) {
         (*D) = CriaItem(novo);
 	}
-	else InsereDicionario(&(*D)->prox, novo);
+	if (aux->Item.Chave < novo.Chave){
+        InsereDicionario(&(*D)->prox, novo);
+	}
+	else {
+        (*D)->prox = CriaItem(novo);
+        (*D)->prox->prox = aux;3
+	}
 
 
 
@@ -54,17 +61,7 @@ void RemoveDicionario(TDicionario *D, TItem novo){
     }
 }
 void PesquisaDicionario(TDicionario *D, TItem novo){
-    if((*D) == NULL){
-        //printf("Nao encontrou!");
-        InsereDicionario(&(*D), novo);
-        return;
-    }
-    if((*D)->Item.Chave == novo.Chave){
-        //printf("Encontrou\n");
-        RemoveDicionario(&(*D), novo);
-        return;
-    }
-    PesquisaDicionario(&(*D)->prox, novo);
+
 }
 void imprime (TDicionario D){
     if(D == NULL) {
