@@ -34,19 +34,21 @@ TDicionario CriaItem(TItem novo){
     return no;
 }
 void InsereDicionario(TDicionario *D, TItem novo){
-    TDicionario aux = (*D)->prox;
+
 	//printf("%d\n", novo.Chave);
-	if(aux->Item.Chave == NULL) {
+	if((*D) == NULL) {
         (*D) = CriaItem(novo);
+        return;
 	}
-	if (aux->Item.Chave < novo.Chave){
+
+	if((*D)->Item.Chave < novo.Chave){
         InsereDicionario(&(*D)->prox, novo);
 	}
 	else {
-        (*D)->prox = CriaItem(novo);
-        (*D)->prox->prox = aux;3
+        TDicionario aux = CriaItem(novo);
+        aux->prox = (*D);
+        (*D) = aux;
 	}
-
 
 
 }
@@ -60,8 +62,12 @@ void RemoveDicionario(TDicionario *D, TItem novo){
         free(aux);
     }
 }
-void PesquisaDicionario(TDicionario *D, TItem novo){
-
+void PesquisaDicionario(TDicionario D, TItem novo){
+    int i;
+    TDicionario aux = (D);
+    for ( i = 0; i < tamanho(D); i++){
+        aux = aux->prox;
+    }
 }
 void imprime (TDicionario D){
     if(D == NULL) {
@@ -85,7 +91,7 @@ int tamanho(TDicionario D){
 int main()
 {
     TDicionario D;
-    inicializa(&D);
+    //inicializa(&D);
 
     TItem novo;
     while (novo.Chave != -1){
@@ -96,7 +102,7 @@ int main()
     }
     scanf("%d", &novo.Chave);
     PesquisaDicionario(&D, novo);
-    //imprime(D);
-    printf("%d", tamanho(D));
+    imprime(D);
+   /// printf("%d", tamanho(D));
     return 0;
 }

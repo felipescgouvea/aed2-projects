@@ -40,8 +40,6 @@ void InsereDicionario(TDicionario *D, TItem novo){
 	}
 	else InsereDicionario(&(*D)->prox, novo);
 
-
-
 }
 
 void RemoveDicionario(TDicionario *D, TItem novo){
