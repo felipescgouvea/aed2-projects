@@ -78,7 +78,7 @@ void DeletaNo(TArvBin *arv, TItem item){
 
         TArvBin aux;
         TArvBin aux2;
-
+        //printf("%d\n", (*arv)->Item.Chave);
         if(qtd_filhos(*arv) < 2){
             if((*arv)->dir == NULL){
 
@@ -100,13 +100,15 @@ void DeletaNo(TArvBin *arv, TItem item){
             while ( aux->esq != NULL){
                 aux = aux->esq;
             }
-            TArvBin aux3 = aux;
-            aux = aux->dir;
-            aux2 = aux3;
-            //aux = NULL;
-            aux2-> dir = (*arv)->dir;
-            aux2-> esq = (*arv)->esq;
-            (*arv) = aux2;
+
+            (*arv)->Item = aux->Item;
+            RemoveABB(&(*arv)->dir, aux->Item);
+            RemoveABB(&(*arv)->esq, aux->Item);
+            //DeletaNo(*arv, aux->Item);
+
+   //         printf("%d\n",(*arv)->Item);
+
+
             //printf("%d", (*arv)->Item.Chave);
         }
 
