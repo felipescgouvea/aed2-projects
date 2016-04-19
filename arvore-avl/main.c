@@ -28,12 +28,6 @@
         TArvBin esq, dir;
         int fb;
     }TNo;
-
-    void insere(TArvBin arv, TItem novo){
-        arv->Item = novo;
-        arv->esq = NULL;
-        arv->dir = NULL;
-    }
    ///printf("%d \n", arv->Item.Chave);
     //Balanceamento pós ordem, dir, esq, nó
     ///(C3(C2(C1()())())(C4()(C9(C5()(C8()()))())))
@@ -149,7 +143,8 @@ int Balanca_No(TArvBin *A){
     //int fb_dir = 2;
     //int fb_esq = 1;
     if (fb > 1){
-        if (fb_esq > 0){
+        //printf("ENTROU \n");
+		if (fb_esq >= 0){
             //printf("LL\n");
             LL(&(*A));
         }
@@ -157,9 +152,10 @@ int Balanca_No(TArvBin *A){
             //printf("LR\n");
             LR(&(*A));
         }
+		
     }
     if (fb < -1){
-        if (fb_dir < 0){
+        if (fb_dir <= 0){
            //printf("RR\n");
             RR(&(*A));
         }
@@ -223,48 +219,88 @@ int InsereAVL (TArvBin *aux, TItem novo){
 
 }
 
-void DeletaNo(TArvBin *arv, TItem item){
+int DeletaNo(TArvBin *arv, TItem item){
         TArvBin aux;
         TArvBin aux2;
         //printf("%d\n", (*arv)->Item.Chave);
         if(qtd_filhos(*arv) < 2){
             if((*arv)->dir == NULL){
-
+				//retira esq
                 aux = (*arv);
                 (*arv) = (*arv)->esq;
                 free(aux);
-                //retira esq
+                return TRUE;
             }
             else{
+				 //retira dir
                 aux = (*arv);
                 (*arv) = (*arv)->dir;
                 free(aux);
-                //retira dir
+                return TRUE;
             }
         }
         else {
-            //printf("poxa que legal\n");
-            aux = (*arv)->dir;
-            while ( aux->esq != NULL){
-                aux = aux->esq;
-            }
+			int diminuiu;
+            diminuiu = Substituto(&(*arv), &(*arv)->dir);
+			//printf("diminuiu %d", diminuiu);
+			//printf("FB = %d  NO = %d", (*arv)->fb, (*arv)->Item.Chave );
+			
+            if(diminuiu == TRUE){
 
-            (*arv)->Item = aux->Item;
-            if(RemoveAVL(&(*arv)->dir, aux->Item) == TRUE);
-            //RemoveAVL(&(*arv)->esq, aux->Item);
-            //DeletaNo(*arv, aux->Item);
-   //         printf("%d\n",(*arv)->Item);
-            //printf("%d", (*arv)->Item.Chave);
+				if((*arv)->fb == 1) {
+						(*arv)->fb++;
+						return Balanca_No(&(*arv));
+				}
+				if((*arv)->fb == 0){
+					(*arv)->fb = 1;
+					return 0;
+
+				}
+				if((*arv)->fb == -1){
+
+					(*arv)->fb = 0;
+					return 1;
+				}
+            }
+            else return FALSE;
         }
 }
+int Substituto(TArvBin *arv, TArvBin *arv_dir){
+	if((*arv_dir)->esq != NULL){
+		int prox = Substituto(&(*arv), &(*arv_dir)->esq);
+		if (prox == TRUE){
+				if((*arv_dir)->fb == -1) {
+					return Balanca_No(&(*arv_dir)->dir);
+				}
+				if((*arv_dir)->fb == 0){
+					(*arv_dir)->fb = -1;
+					return 0;
+				}
+				if((*arv_dir)->fb == 1){
+
+					(*arv_dir)->fb = 0;
+					return 1;
+				}
+		}
+		else return FALSE;
+	}
+	else {
+		(*arv)->Item = (*arv_dir)->Item;
+		//*arv = *arv_dir;
+		*arv_dir = (*arv_dir)->dir;
+		return TRUE;
+
+	}
+}
+
 int RemoveAVL (TArvBin *aux, TItem item){
     //printf("removendo...\n");
     if((*aux) == NULL) return 0;
 
     if((*aux)->Item.Chave == item.Chave) {
-        DeletaNo(&(*aux), item);
+        return DeletaNo(&(*aux), item);
         //printf("deletou!\n");
-        return 1;
+
     }
     int diminuiu;
     if(item.Chave > (*aux)->Item.Chave){
