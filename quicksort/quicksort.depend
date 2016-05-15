@@ -1,9 +1,0 @@
-# depslib dependency file v1.0
-1458933667 source:/home/felipe/Documentos/gitprojects/aed2-projects/aed2-projects/quicksort/main.c
-	<stdio.h>
-	<stdlib.h>
-
-1458969140 source:/home/felipe/Documentos/gitprojects/aed2-projects/quicksort/main.c
-	<stdio.h>
-	<stdlib.h>
-
