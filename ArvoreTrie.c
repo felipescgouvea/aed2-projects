@@ -40,7 +40,7 @@ TArvBin *CriaNoExterno(int digito, TArvBin *novo, TArvBin *velho) {
 	TArvBin interno = Cria(nulo);
 	int digito_novo = retornaDigito((*novo)->Item.Chave, digito);
 	int digito_arvore = retornaDigito((*velho)->Item.Chave, digito);
-	
+
 	if(digito_novo == digito_arvore){
 		if(digito_novo == 1){
 			(interno)->Dir = CriaNoExterno(digito+1, novo, velho);
@@ -57,7 +57,7 @@ TArvBin *CriaNoExterno(int digito, TArvBin *novo, TArvBin *velho) {
 			(interno)->Dir = *velho;
 		}
 	}
-	
+
 	//printf("FOI ");
 	return interno;
 }
@@ -102,12 +102,14 @@ int InsereRecursivo(TArvBin *pRaiz, TItem x, int digito) {
 		(*pRaiz) = 	Cria(x);
 	} else {
 		if ( (*pRaiz)->Dir == NULL && (*pRaiz)->Esq == NULL ) {
-			TArvBin novo = Cria(x);
+            if(x.Chave != (*pRaiz)->Item.Chave){
+                TArvBin novo = Cria(x);
+                (*pRaiz) = CriaNoExterno(digito, &novo, pRaiz);
+            }
 
-			(*pRaiz) = CriaNoExterno(digito, &novo, pRaiz);
-			
+
 			//printf("Dividiu %d\n", (*pRaiz)->Item.Chave);
-			
+
 			return 0;
 		} else {
 			if(digito_novo == 1) {
@@ -138,41 +140,70 @@ int RetiraRecursivo(TArvBin *pRaiz, TChave x, int digito) {
 				TArvBin aux = (*pRaiz);
 				(*pRaiz) = NULL;
 				free(aux);
-	
-				return 1;
+
+				return 2;
 			}
-			else{
-				return 0;	
-			} 
+			else return 0;
+
 		}
 		else{
 			//printf("interno\n");
 			if(retornaDigito(x,digito) == 1) {
 				//printf("dir\n");
-				if(RetiraRecursivo(&(*pRaiz)->Dir, x, digito+1) == 1){
+				int result = RetiraRecursivo(&(*pRaiz)->Dir, x, digito+1);
+				if(result == 2){
 				//	printf("removeu");
 					if((*pRaiz)->Dir == NULL){
-						TArvBin aux = (*pRaiz);
-						(*pRaiz) = (*pRaiz)->Esq;
-						free (aux);
-						return 1;
+                        if((*pRaiz)->Esq->Esq == NULL && (*pRaiz)->Esq->Dir == NULL){
+                            //printf("no %d, ", (*pRaiz)->Item.Chave);
+                            TArvBin aux = (*pRaiz);
+                            (*pRaiz) = (*pRaiz)->Esq;
+                            free (aux);
+                            return 1;
+                        }
+                        else return 0;
 					}
 					else return 0;
 				}
-				else return 0;				
+				else if(result == 1){
+                        if((*pRaiz)->Dir == NULL){
+                            //printf("no %d, ", (*pRaiz)->Item.Chave);
+                            TArvBin aux = (*pRaiz);
+                            (*pRaiz) = (*pRaiz)->Esq;
+                            free (aux);
+                            return 1;
+                        }
+                        else return 0;
+				}
+				else return 0;
 			}
 			else{
 				//printf("esq\n");
-				if(RetiraRecursivo(&(*pRaiz)->Esq, x, digito+1) == 1){
+				int result = RetiraRecursivo(&(*pRaiz)->Esq, x, digito+1);
+				if(result == 2){
 					//printf("removeu");
 					if((*pRaiz)->Esq == NULL){
-						TArvBin aux = (*pRaiz);
-						(*pRaiz) = (*pRaiz)->Esq;
-						free (aux);
-						return 1;
+						if((*pRaiz)->Dir->Esq == NULL && (*pRaiz)->Dir->Dir == NULL){
+                            //printf("no %d, ", (*pRaiz)->Item.Chave);
+                            TArvBin aux = (*pRaiz);
+                            (*pRaiz) = (*pRaiz)->Esq;
+                            free (aux);
+                            return 1;
+						}
+						else return 0;
 					}
 					else return 0;
 				}
+				else if(result == 1){
+                        if((*pRaiz)->Esq == NULL){
+                            //printf("no %d, ", (*pRaiz)->Item.Chave);
+                            TArvBin aux = (*pRaiz);
+                            (*pRaiz) = (*pRaiz)->Esq;
+                            free (aux);
+                            return 1;
+                        }
+                        else return 0;
+                }
 				else return 0;
 			}
 			//printf("bug");
@@ -181,15 +212,16 @@ int RetiraRecursivo(TArvBin *pRaiz, TChave x, int digito) {
 }
 
 void Imprime(TArvBin pRaiz) {
-	if(pRaiz != NULL) {
+	if (pRaiz == NULL) printf("()");
+	else{
 		if(pRaiz->Item.Chave == -1) printf("(");
-		else printf("C%d", pRaiz->Item.Chave);
+		else printf("(C%d", pRaiz->Item.Chave);
 		Imprime(pRaiz->Esq);
 		Imprime(pRaiz->Dir);
 		printf(")");
 	}
-	else printf("()");
-	
+
+
 
 }
 int main() {
@@ -202,12 +234,12 @@ int main() {
 
 	TArvBin raiz;
 	raiz = NULL;
-	
+
 	for(cont = 0; cont < qtd_num ; cont++) {
 		scanf("%d", &num.Chave);
 		Insere(&raiz, num);
 	}
-	
+
 	scanf("%d", &num.Chave);
 	if(Pesquisa(raiz, num.Chave) != NULL){
 		//printf("Retirou %d", num.Chave);
